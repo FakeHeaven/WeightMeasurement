@@ -10,7 +10,9 @@ function npmCSS() {
             "../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css",
             "../node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css",
             "../node_modules/toastr/build/toastr.min.css",
-            "../node_modules/@claviska/jquery-alertable/jquery.alertable.css"
+            "../node_modules/@claviska/jquery-alertable/jquery.alertable.css",
+            "../node_modules/gijgo/css/gijgo.min.css"
+
         ])
         .pipe(concat("vendor.css"))
         .pipe(gulp.dest("wwwroot/css"));
@@ -30,7 +32,8 @@ function npmJS() {
             "../node_modules/datatables.net-responsive/js/dataTables.responsive.min.js",
             "../node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js",
             "../node_modules/@claviska/jquery-alertable/jquery.alertable.min.js",
-            "../node_modules/gasparesganga-jquery-loading-overlay/dist/loadingoverlay.min.js"
+            "../node_modules/gasparesganga-jquery-loading-overlay/dist/loadingoverlay.min.js",
+            "../node_modules/gijgo/js/gijgo.min.js"
         ])
         .pipe(concat("vendor.js"))
         .pipe(gulp.dest("wwwroot/js"));
