@@ -1,0 +1,15 @@
+﻿@model List<WeightMeasurement.Models.HomeSubUserModel>
+
+@foreach (var su in Model)
+{
+<div class="row" style="margin-bottom:5px;">
+    <div class="col-8">
+        @su.Name @su.Age
+    </div>
+
+    <div class="col-4">
+        <button class="subuser-edit btn btn-info btn-sm" data-id="@su.Id"><i class="fas fa-edit"></i></button>
+        <button class="subuser-delete btn btn-danger btn-sm" data-id="@su.Id" data-name="@su.Name"><i class="fas fa-trash-alt"></i></button>
+    </div>
+</div>
+}

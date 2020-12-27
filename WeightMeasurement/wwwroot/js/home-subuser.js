@@ -29,6 +29,17 @@ function LoadSubUserManageModal(id) {
     });
 }
 
+function RetrieveSubUserList() {
+    $.ajax({
+        url: "/Home/RetrieveSubUserList",
+        method: "GET",
+        success: function (html) {
+            $("#subusers").html(html);
+            
+        }
+    });
+}
+
 function DeleteSubUser(id, name) {
     Confirm("Remove SubUser", "fa-exclamation-triangle", "text-danger", `Are you sure you want to remove <strong>${name}</strong> from the list?`,
         function () {
@@ -37,7 +48,8 @@ function DeleteSubUser(id, name) {
                 method: "GET",
                 success: function (result) {
                     if (result.success) {
-                        toastr.success("Sub User successfully removed.");                        
+                        toastr.success("Sub User successfully removed.");
+                        RetrieveSubUserList();
                     } else {
                         toastr.error("Sub User could not be removed.");
                     }
@@ -90,8 +102,7 @@ function AttachSubUserFormValidation() {
                 success: function (result) {
                     if (result.success) {
                         toastr.success("New Sub User successfully added.");
-                    } else if (result.reason === "duplicate") {
-                        toastr.error("The Sub User name already exists.");
+                        RetrieveSubUserList();
                     } else {
                         toastr.error("New Sub User could not be added.");
                     }
