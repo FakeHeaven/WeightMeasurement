@@ -13,7 +13,9 @@ namespace WeightMeasurement.Models
 
         public decimal Weight { get; set; }
 
+        public string Date { get; set; }
 
+        public int SubUserId { get; set; }
 
     }
 }

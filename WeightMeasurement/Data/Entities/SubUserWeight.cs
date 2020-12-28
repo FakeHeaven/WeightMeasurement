@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WeightMeasurement.Data.Entities
@@ -14,6 +15,8 @@ namespace WeightMeasurement.Data.Entities
         public virtual SubUser SubUser { get; set; }
 
         public decimal Weight { get; set; }
+
+        public DateTime AddedOn { get; set; }
 
         public bool SoftDeleted { get; set; }
 

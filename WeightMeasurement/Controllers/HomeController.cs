@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,67 +22,85 @@ namespace WeightMeasurement.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _data;
         private readonly UserManager<IdentityUser> _um;
+        private readonly IAuthorizationService _auth;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext data, UserManager<IdentityUser> um)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext data, UserManager<IdentityUser> um, IAuthorizationService auth)
         {
             _logger = logger;
             _data = data;
             _um = um;
+            _auth = auth;
 
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var vm = new HomeViewModel();
-      
 
-            vm.SubUsers = _data.SubUsers.Where(m => m.UserId == _um.GetUserId(User) && !m.SoftDeleted).Select(m => new HomeSubUserModel()
-            {
-                Id = m.Id,
-                Name = m.Name,
-                Age = m.DateOfBirth.GetAge()
-            }).ToList();
+            vm.SubUsers = await GetSubUsers();
 
-            vm.Weights = _data.SubUserWeights.Where(m => m.SubUser.UserId == _um.GetUserId(User) && !m.SoftDeleted).Select(m => new HomeWeightModel()
-            {
-                Id = m.Id,
-                Name = m.SubUser.Name,
-                Weight = m.Weight
-
-            }).ToList();
-
-
+            vm.Weights = await GetWeights();
 
             return View(vm);
         }
 
-        public IActionResult RetrieveSubUserList()
+        public async Task<IActionResult> RetrieveSubUserList()
         {
-            var vm = _data.SubUsers.Where(m => m.UserId == _um.GetUserId(User) && !m.SoftDeleted).Select(m => new HomeSubUserModel()
+            return PartialView("_SubUserList", await GetSubUsers());
+        }
+
+        private async Task<List<HomeSubUserModel>> GetSubUsers()
+        {
+            var isAdmin = (await _auth.AuthorizeAsync(User, "Admin")).Succeeded;
+            var data = new List<SubUser>();
+            if (isAdmin)
+            {
+                data = _data.SubUsers.Where(m => !m.SoftDeleted).ToList();
+            }
+            else
+            {
+                data = _data.SubUsers.Where(m => m.UserId == _um.GetUserId(User) && !m.SoftDeleted).ToList();
+            }
+
+            return data.Select(m => new HomeSubUserModel()
             {
                 Id = m.Id,
                 Name = m.Name,
                 Age = m.DateOfBirth.GetAge()
             }).ToList();
-
-            return PartialView("_SubUserList", vm);
         }
 
-        public IActionResult RetrieveWeightList()
+        private async Task<List<HomeWeightModel>> GetWeights()
         {
-            var vm = _data.SubUserWeights.Where(m => m.SubUser.UserId == _um.GetUserId(User) && !m.SoftDeleted).Select(m => new HomeWeightModel()
+            var isAdmin = (await _auth.AuthorizeAsync(User, "Admin")).Succeeded;
+            var data = new List<SubUserWeight>();
+            if (isAdmin)
+            {
+                data = _data.SubUserWeights.Include(m => m.SubUser).Where(m => !m.SoftDeleted).ToList();
+            }
+            else
+            {
+                data = _data.SubUserWeights.Where(m => m.SubUser.UserId == _um.GetUserId(User) && !m.SoftDeleted && !m.SubUser.SoftDeleted).ToList();
+            }
+
+            return data.Select(m => new HomeWeightModel()
             {
                 Id = m.Id,
-                Name = m.SubUser.Name,
-                Weight = m.Weight
+                Name = $"{m.SubUser.Name} {((isAdmin) ? $"({_um.GetUserName(User)})" : "")}",
+                Weight = m.Weight,
+                Date = m.AddedOn.ToString("d.M.yyyy"),
+                SubUserId = m.SubUserId
             }).ToList();
+        }
 
-            return PartialView("_WeightList", vm);
+        public async Task<IActionResult> RetrieveWeightList()
+        {
+           return PartialView("_WeightList", await GetWeights());
         }
 
 
-        public IActionResult WeightManage(int id)
+        public IActionResult WeightManage(int id, int subuserid)
         {
             var su = new SubUserWeight();
             if (id != 0)
@@ -91,22 +110,16 @@ namespace WeightMeasurement.Controllers
             var vm = new WeightManageViewModel();
 
             vm.Id = su.Id;
-            vm.SubUserId = su.SubUserId;
+            vm.SubUserId = subuserid;
             vm.Weight = su.Weight;
+            vm.AddedOn = su.AddedOn;
 
-            vm.SubUsers = _data.SubUsers.Where(m => m.UserId == _um.GetUserId(User) && !m.SoftDeleted).Select(m => new SelectListItem()
-            {
-
-                Text = m.Name,
-                Value = m.Id.ToString(),
-                Selected = m.Id == su.SubUserId
-
-            }).ToList();
+            vm.SubUserName = _data.SubUsers.Single(m => m.Id == subuserid)?.Name;
 
             return PartialView("_WeightManage", vm);
         }
 
-        public IActionResult WeightUpdate(int id, int subUserId, decimal weight)
+        public IActionResult WeightUpdate(int id, int subUserId, decimal weight, DateTime date)
         {
             try
             {
@@ -118,11 +131,15 @@ namespace WeightMeasurement.Controllers
 
                 su.SubUserId = subUserId;
                 su.Weight = weight;
+                su.AddedOn = date;
 
                 if (id == 0)
+                {
                     _data.SubUserWeights.Add(su);
+                }
                 else
                     _data.SubUserWeights.Update(su);
+
 
                 _data.SaveChanges();
 

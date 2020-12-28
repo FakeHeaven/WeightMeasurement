@@ -23,7 +23,8 @@ function LoadSubUserManageModal(id) {
             AttachSubUserFormValidation();
 
             $('#dob').datepicker({
-                uiLibrary: 'bootstrap4'
+                uiLibrary: 'bootstrap4',
+                format: 'dd.mm.yyyy'
             });
         }
     });

@@ -1,31 +1,51 @@
 ﻿$(function () {
-    $("#weight-add").on("click", function () {
-        LoadWeightManageModal(0);
+    $(document).on("click", ".weight-add", function () {
+        LoadWeightManageModal(0, $(this).data("subuser-id"));
+
     });
 
     $(document).on("click", ".weight-edit", function () {
-        LoadWeightManageModal($(this).data("id"));
+        LoadWeightManageModal($(this).data("id"), $(this).data("subuser-id"));
     });
 
     $(document).on("click", ".weight-delete", function () {
         DeleteWeight($(this).data("id"), $(this).data("name"));
-
     });
+
+    AttachTableRules();
 });
 
-function LoadWeightManageModal(id) {
+function LoadWeightManageModal(id, subuserid) {
     $.ajax({
-        url: "/Home/WeightManage?id=" + id,
+        url: "/Home/WeightManage?id=" + id + "&subuserid=" + subuserid,
         method: "GET",
         success: function (html) {
             $("#modal").html(html);
             $('#modal').modal(modalOptions, 'show');
             AttachWeightFormValidation();
 
+            $('#date').datepicker({
+                uiLibrary: 'bootstrap4',
+                format: 'dd.mm.yyyy'
+            });
         }
     });
 }
 
+function AttachTableRules() {
+    $("#weights-table").DataTable({
+        saveState: true,
+        pagingType: "full",
+        pageLength: 25,
+        lengthChange: false,
+        searching: true,
+        ordering: false,
+        length: false,
+        info: false,
+        dom: 'fBrtip',
+        language: language
+    });
+}
 
 function RetrieveWeightList() {
     $.ajax({
@@ -33,13 +53,13 @@ function RetrieveWeightList() {
         method: "GET",
         success: function (html) {
             $("#weights").html(html);
-
+            AttachTableRules();
         }
     });
 }
 
 function DeleteWeight(id, name) {
-    Confirm("Remove weight", "fa-exclamation-triangle", "text-danger", `Are you sure you want to remove <strong>${name}</strong> from the list?`,
+    Confirm("Remove weight", "fa-exclamation-triangle", "text-danger", `Are you sure you want to remove <strong>${name}'s</strong> weight record?`,
         function () {
             $.ajax({
                 url: "/Home/WeightDelete?id=" + id,
@@ -57,8 +77,6 @@ function DeleteWeight(id, name) {
                 }
             });
         });
-
-    
 }
 
 function AttachWeightFormValidation() {
@@ -72,9 +90,13 @@ function AttachWeightFormValidation() {
             },
 
             weight: {
+                required: true, 
+            },
+
+            date: {
                 required: true,
-                
             }
+
         },
         messages: {
             name: {
@@ -85,7 +107,13 @@ function AttachWeightFormValidation() {
             weight: {
                 required: "Please supply a name for this Sub User.",
                 
+            },
+
+            date: {
+                required: "Please select a date for this weight entry.",
             }
+
+
         },
         submitHandler: function (form) {
             $.ajax({
@@ -95,7 +123,8 @@ function AttachWeightFormValidation() {
                 data: {
                     id: form.id.value,
                     subuserid: form.subuserid.value,
-                    weight: form.weight.value
+                    weight: form.weight.value,
+                    date: form.date.value
                 },
                 success: function (result) {
                     if (result.success) {

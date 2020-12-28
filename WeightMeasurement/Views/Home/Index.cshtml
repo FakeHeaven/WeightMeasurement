@@ -11,40 +11,22 @@
 
 <div class="row">
     <div class="col-8">
-        <h5>Weights <button id="weight-add" class="btn btn-primary btn-sm float-right"><i class="fas fa-plus"></i> Add weight </button></h5> <hr>
+        <h5>Weights</h5> <hr>
         <div id="weights">
             <partial name="_WeightList" model="Model.Weights" />
-
         </div>
     </div>
     <div class="col-4">
         <h5>Sub Users <button id="subuser-add" class="btn btn-primary btn-sm float-right"><i class="fas fa-plus"></i> Add SubUser </button></h5> <hr>
         <div id="subusers">
             <partial name="_SubUserList" model="Model.SubUsers" />
-
         </div>
     </div>
 </div>
 
-    
 
-    
+@section Scripts{
 
-    
-
-    @foreach (var su in Model.Weights)
-    {
-        <div>@su.Name @su.Weight</div>
-
-        <button class="weight-edit btn btn-primary" data-id="@su.Id"><i class="fas fa-edit"></i></button>
-        <button class="weight-delete btn btn-primary" data-id="@su.Id" data-name="@su.Name"><i class="fas fa-trash-alt"></i></button>
-
-    }
-
-
-    @section Scripts{
-
-        <script type="text/javascript" src="~/js/home-subuser.js" asp-append-version="true"></script>
-        <script type="text/javascript" src="~/js/home-weights.js" asp-append-version="true"></script>
-    }
-
+    <script type="text/javascript" src="~/js/home-subuser.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/home-weights.js" asp-append-version="true"></script>
+}

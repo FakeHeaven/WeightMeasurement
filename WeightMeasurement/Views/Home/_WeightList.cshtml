@@ -1,15 +1,28 @@
 ﻿@model List<WeightMeasurement.Models.HomeWeightModel>
 
-@foreach (var su in Model)
-{
-    <div class="row" style="margin-bottom:5px;">
-        <div class="col-8">
-            @su.Name @su.Weight
-        </div>
-
-        <div class="col-4">
-            <button class="weight-edit btn btn-info btn-sm" data-id="@su.Id"><i class="fas fa-edit"></i></button>
-            <button class="weight-delete btn btn-danger btn-sm" data-id="@su.Id" data-name="@su.Name"><i class="fas fa-trash-alt"></i></button>
-        </div>
-    </div>
-}
+<table id="weights-table" class="table table-striped" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Weight</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var su in Model)
+        {
+        <tr>
+            <td>@su.Name</td>
+            <td>@su.Weight</td>
+            <td>@su.Date</td>
+            <td>
+                <span class="float-right">
+                    <button class="weight-edit btn btn-info btn-sm" data-id="@su.Id" data-subuser-id="@su.SubUserId"><i class="fas fa-edit"></i></button>
+                    <button class="weight-delete btn btn-danger btn-sm" data-id="@su.Id" data-name="@su.Name"><i class="fas fa-trash-alt"></i></button>
+                </span>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

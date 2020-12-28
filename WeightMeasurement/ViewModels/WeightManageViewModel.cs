@@ -14,7 +14,9 @@ namespace WeightMeasurement.ViewModels
 
         public decimal Weight { get; set; }
 
-        public List<SelectListItem> SubUsers { get; set; } = new List<SelectListItem>();
+        public string SubUserName { get; set; }
+
+        public DateTime AddedOn { get; set; }
 
     }
 }

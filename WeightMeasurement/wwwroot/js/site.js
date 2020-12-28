@@ -8,6 +8,10 @@ var modalOptions = {
     backdrop: "static"
 };
 
+var language = {
+    emptyTable: '<span class="text-danger">No data available</span>'
+};
+
 //Alert for delete 
 function Alert(title, icon, color, body, callback) {
     $.alertable.alert("<strong>" + title + "</strong><br /><br /><i class='fas " + icon + " " + color + "'></i> " + body, {
