@@ -52,6 +52,7 @@ namespace WeightMeasurement.Controllers
 
         private async Task<List<HomeSubUserModel>> GetSubUsers()
         {
+
             var isAdmin = (await _auth.AuthorizeAsync(User, "Admin")).Succeeded;
             var data = new List<SubUser>();
             if (isAdmin)
@@ -67,8 +68,9 @@ namespace WeightMeasurement.Controllers
             {
                 Id = m.Id,
                 Name = m.Name,
-                Age = m.DateOfBirth.GetAge()
-            }).ToList();
+                Age = m.DateOfBirth.GetAge(),
+                Email = GetUser(m.UserId).Result.Email
+            }).OrderBy(m => m.Email).ThenBy(m => m.Name).ToList();
         }
 
         private async Task<List<HomeWeightModel>> GetWeights()
@@ -81,18 +83,28 @@ namespace WeightMeasurement.Controllers
             }
             else
             {
-                data = _data.SubUserWeights.Where(m => m.SubUser.UserId == _um.GetUserId(User) && !m.SoftDeleted && !m.SubUser.SoftDeleted).ToList();
+                data = _data.SubUserWeights.Include(m => m.SubUser)
+                    .Where(m => m.SubUser.UserId == _um.GetUserId(User) && !m.SoftDeleted && !m.SubUser.SoftDeleted)
+                    .ToList();
             }
 
             return data.Select(m => new HomeWeightModel()
             {
                 Id = m.Id,
-                Name = $"{m.SubUser.Name} {((isAdmin) ? $"({_um.GetUserName(User)})" : "")}",
+                Name = m.SubUser.Name,
                 Weight = m.Weight,
                 Date = m.AddedOn.ToString("d.M.yyyy"),
-                SubUserId = m.SubUserId
-            }).ToList();
+                SubUserId = m.SubUserId,
+                Email = GetUser(m.SubUser.UserId).Result.Email
+            }).OrderBy(m => m.Email).ThenBy(m => m.Name).ToList();
         }
+
+        private async Task<IdentityUser> GetUser(string userId)
+        {
+            return await _um.FindByIdAsync(userId); 
+        }
+
+
 
         public async Task<IActionResult> RetrieveWeightList()
         {

@@ -13,5 +13,7 @@ namespace WeightMeasurement.Models
 
         public int Age { get; set; }
 
+        public string Email { get; set; }
+
     }
 }

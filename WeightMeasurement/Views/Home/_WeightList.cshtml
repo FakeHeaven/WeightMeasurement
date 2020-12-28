@@ -1,5 +1,7 @@
 ﻿@model List<WeightMeasurement.Models.HomeWeightModel>
 
+@{var isAdmin = (await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded; }
+
 <table id="weights-table" class="table table-striped" style="width: 100%;">
     <thead>
         <tr>
@@ -12,17 +14,23 @@
     <tbody>
         @foreach (var su in Model)
         {
-        <tr>
-            <td>@su.Name</td>
-            <td>@su.Weight</td>
-            <td>@su.Date</td>
-            <td>
-                <span class="float-right">
-                    <button class="weight-edit btn btn-info btn-sm" data-id="@su.Id" data-subuser-id="@su.SubUserId"><i class="fas fa-edit"></i></button>
-                    <button class="weight-delete btn btn-danger btn-sm" data-id="@su.Id" data-name="@su.Name"><i class="fas fa-trash-alt"></i></button>
-                </span>
-            </td>
-        </tr>
+            <tr>
+                <td>@su.Name  
+                        @if (isAdmin)
+                            {
+                                <br/>
+                                @su.Email
+                            }
+                </td>
+                <td>@su.Weight</td>
+                <td>@su.Date</td>
+                <td>
+                    <span class="float-right">
+                        <button class="weight-edit btn btn-info btn-sm" data-id="@su.Id" data-subuser-id="@su.SubUserId"><i class="fas fa-edit"></i></button>
+                        <button class="weight-delete btn btn-danger btn-sm" data-id="@su.Id" data-name="@su.Name"><i class="fas fa-trash-alt"></i></button>
+                    </span>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

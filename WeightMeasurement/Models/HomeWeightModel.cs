@@ -17,5 +17,7 @@ namespace WeightMeasurement.Models
 
         public int SubUserId { get; set; }
 
+        public string Email { get; set; }
+
     }
 }
