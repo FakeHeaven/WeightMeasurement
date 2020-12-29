@@ -1,0 +1,49 @@
+﻿@model WeightMeasurement.ViewModels.GraphDateRangeSelecterViewModel
+
+<div class="modal-dialog">
+    <form id="form" autocomplete="off">
+        <input name="subuserid" type="hidden" value="@Model.SubUserId" />
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Graph Range Selecter</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="name">Start Date</label><br />
+
+                            <input id="date-start" name="date_start" />
+                            @Model.FirstDate.ToString("d.M.yyyy")
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="name">End Date</label><br />
+
+                            <input id="date-end" name="date_end" />
+                            @Model.LastDate.ToString("d.M.yyyy")
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="validate-error" class="text-danger"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </form>
+</div>

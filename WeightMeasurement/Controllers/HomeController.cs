@@ -45,6 +45,18 @@ namespace WeightMeasurement.Controllers
             return View(vm);
         }
 
+        public IActionResult GraphDateRangeSelecter(int subUserId)
+        {
+            var vm = new GraphDateRangeSelecterViewModel();
+
+
+            vm.FirstDate = _data.SubUserWeights.OrderBy(m => m.AddedOn).First(m => m.SubUserId == subUserId && !m.SoftDeleted).AddedOn;
+            vm.LastDate = _data.SubUserWeights.OrderByDescending(m => m.AddedOn).First(m => m.SubUserId == subUserId && !m.SoftDeleted).AddedOn;
+            vm.SubUserId = subUserId; 
+
+            return PartialView("_GraphDateRangeSelecter", vm); 
+        }
+
         public async Task<IActionResult> RetrieveSubUserList()
         {
             return PartialView("_SubUserList", await GetSubUsers());
