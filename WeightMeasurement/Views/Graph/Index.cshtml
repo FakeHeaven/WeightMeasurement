@@ -1,1 +1,28 @@
-﻿@TempData["subUserId"]
+﻿@model WeightMeasurement.ViewModels.GraphViewModel
+
+@using Newtonsoft.Json
+
+<h1>@Model.Name <small>@Model.DateRange</small> </h1>
+<hr/>
+
+<div class="row">
+    <div class="col-12">
+        <div id="chartdiv" style="height:500px;">
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+    <script>
+    var data = @Html.Raw(JsonConvert.SerializeObject(Model.Data));
+
+    </script>
+
+    <script type="text/javascript" src="~/js/graph.js" asp-append-version="true"></script>
+}
