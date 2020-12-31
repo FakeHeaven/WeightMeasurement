@@ -33,17 +33,6 @@ namespace WeightMeasurement.Controllers
 
         }
 
-        public async Task<IActionResult> LoginUserStatus(string returnUrl)
-        {
-            if (!_um.GetUserAsync(User).Result.IsActive)
-            {
-                return RedirectToPage("./Lockout");
-            }
-
-            _logger.LogInformation("User logged in.");
-            return LocalRedirect(returnUrl);
-        }
-
         [Authorize]
         public async Task<IActionResult> Index()
         {

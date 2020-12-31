@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using WeightMeasurement.ViewModels;
 
 namespace WeightMeasurement.Controllers
 {
+    [Authorize(Policy = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _um;
@@ -23,7 +25,7 @@ namespace WeightMeasurement.Controllers
         {
             var vm = new AdminViewModel();
 
-            vm.Users = _um.Users.Select(m => new AdminUserModel()
+            vm.Users = _um.Users.Where(m => m.Id != _um.GetUserId(User)).Select(m => new AdminUserModel()
             {
                 Id = m.Id,
                 Name = m.Name,

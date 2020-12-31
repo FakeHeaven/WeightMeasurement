@@ -29,7 +29,8 @@
                         <td>@su.Email</td>
                         <td>@su.SubUserCount</td>
                         <td>
-                            <input class="user-toggle" type="checkbox" @isChecked  data-subuser-id="@su.Id" data-toggle="toggle" data-size="xs">
+                            <input class="user-toggle" type="checkbox" @isChecked data-on="Active" data-off="Inactive" data-onstyle = "success" data-offstyle = "danger"
+                                data-subuser-id="@su.Id" data-toggle="toggle" data-size="xs">
                         </td>
                     </tr>
                 }
