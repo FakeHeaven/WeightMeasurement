@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using WeightMeasurement.Data.Entities;
+using WeightMeasurement.Models;
 
 namespace WeightMeasurement.Data
-{
-    public class ApplicationDbContext : IdentityDbContext
+{   
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<SubUser> SubUsers { get; set; }
 
@@ -17,5 +18,7 @@ namespace WeightMeasurement.Data
             : base(options)
         {
         }
+
+
     }
 }

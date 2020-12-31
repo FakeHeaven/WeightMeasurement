@@ -21,16 +21,27 @@ namespace WeightMeasurement.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _data;
-        private readonly UserManager<IdentityUser> _um;
+        private readonly UserManager<ApplicationUser> _um;
         private readonly IAuthorizationService _auth;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext data, UserManager<IdentityUser> um, IAuthorizationService auth)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext data, UserManager<ApplicationUser> um, IAuthorizationService auth)
         {
             _logger = logger;
             _data = data;
             _um = um;
             _auth = auth;
 
+        }
+
+        public async Task<IActionResult> LoginUserStatus(string returnUrl)
+        {
+            if (!_um.GetUserAsync(User).Result.IsActive)
+            {
+                return RedirectToPage("./Lockout");
+            }
+
+            _logger.LogInformation("User logged in.");
+            return LocalRedirect(returnUrl);
         }
 
         [Authorize]
@@ -111,7 +122,7 @@ namespace WeightMeasurement.Controllers
             }).OrderBy(m => m.Email).ThenBy(m => m.Name).ToList();
         }
 
-        private async Task<IdentityUser> GetUser(string userId)
+        private async Task<ApplicationUser> GetUser(string userId)
         {
             return await _um.FindByIdAsync(userId); 
         }

@@ -6,7 +6,7 @@
             success: function (html) {
                 $("#modal").html(html);
                 $('#modal').modal(modalOptions, 'show');
-                AttachSubUserFormValidation();
+                AttachGraphFormValidation();
 
                 $('#date-start').datepicker({
                     uiLibrary: 'bootstrap4',
@@ -24,7 +24,7 @@
 });
 
 
-function AttachSubUserFormValidation() {
+function AttachGraphFormValidation() {
     $("#form").validate({
         errorElement: 'div',
         errorLabelContainer: '#validate-error',

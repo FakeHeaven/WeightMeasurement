@@ -1,0 +1,44 @@
+﻿@model WeightMeasurement.ViewModels.AdminViewModel
+
+
+<h1> User Managment </h1>
+<hr />
+
+<div class="row">
+    <div class="col-12">
+        <table id="users-table" class="table table-striped" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Sub Users</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var su in Model.Users)
+                {
+                    var isChecked = "";
+                    if(su.IsActive)
+                    {
+                        isChecked = "checked";
+                    }
+
+                    <tr>
+                        <td>@su.Name</td>
+                        <td>@su.Email</td>
+                        <td>@su.SubUserCount</td>
+                        <td>
+                            <input class="user-toggle" type="checkbox" @isChecked  data-subuser-id="@su.Id" data-toggle="toggle" data-size="xs">
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/admin.js" asp-append-version="true"></script>
+}
