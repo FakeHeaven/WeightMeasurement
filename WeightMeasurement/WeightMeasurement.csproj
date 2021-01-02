@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-WeightMeasurement-F8E6670C-97E2-4AC2-82ED-13BBAB16A495</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Data\Migrations\20201223155836_InitialCreate.cs" />
     <Compile Remove="Data\Migrations\20201223155836_InitialCreate.Designer.cs" />

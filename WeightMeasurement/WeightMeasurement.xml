@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeightMeasurement</name>
+    </assembly>
+    <members>
+        <member name="M:WeightMeasurement.Controllers.Api.AuthorizeController.Login(WeightMeasurement.Models.Api.Credentials)">
+            <summary>
+            Retrieves token and expiration of token
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

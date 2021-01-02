@@ -14,6 +14,8 @@ namespace WeightMeasurement.Data
 
         public DbSet<SubUserWeight> SubUserWeights { get; set; }
 
+        public DbSet<UserToken> UserTokens { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
