@@ -16,16 +16,16 @@ namespace WeightMeasurement.Controllers.Api
     public class AuthorizeController : Controller
     {
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _um;
+        private readonly SignInManager<ApplicationUser> _sm;
         private readonly ApplicationDbContext _data;
 
-        public AuthorizeController(SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager,
+        public AuthorizeController(SignInManager<ApplicationUser> sn,
+            UserManager<ApplicationUser> um,
             ApplicationDbContext data)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _um = um;
+            _sm = sn;
             _data = data;
         }
 
@@ -37,14 +37,14 @@ namespace WeightMeasurement.Controllers.Api
         {
             Response.ContentType = "application/json";
 
-            var user = await _userManager.FindByEmailAsync(c.Email);
+            var user = await _um.FindByEmailAsync(c.Email);
 
             if (user == null || !user.IsActive)
             {
                 return Unauthorized();
             }
 
-            var result = await _signInManager.PasswordSignInAsync(c.Email, c.Password, false, lockoutOnFailure: false);
+            var result = await _sm.PasswordSignInAsync(c.Email, c.Password, false, lockoutOnFailure: false);
 
             if (!result.Succeeded)
             {
@@ -52,7 +52,7 @@ namespace WeightMeasurement.Controllers.Api
             }
 
             var token = Guid.NewGuid();
-            var expiration = DateTime.Now.AddMinutes(20);
+            var expiration = DateTime.UtcNow.AddMinutes(20);
 
             if(_data.UserTokens.Any(m => m.UserId == user.Id))
             {

@@ -16,6 +16,7 @@ using WeightMeasurement.Models;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
+using WeightMeasurement.Filters;
 
 namespace WeightMeasurement
 {
@@ -52,7 +53,7 @@ namespace WeightMeasurement
                     Title = "Weight Measuerment API"
                 });
 
-
+               // c.OperationFilter<AddRequiredHeaders>();
             });
         }
 
