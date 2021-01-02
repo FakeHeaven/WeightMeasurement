@@ -35,48 +35,55 @@ namespace WeightMeasurement.Controllers.Api
         [ProducesResponseType(401)]
         public async Task<IActionResult> Token([FromBody] Credentials c)
         {
-            Response.ContentType = "application/json";
-
-            var user = await _um.FindByEmailAsync(c.Email);
-
-            if (user == null || !user.IsActive)
+            try
             {
-                return Unauthorized();
-            }
+                Response.ContentType = "application/json";
 
-            var result = await _sm.PasswordSignInAsync(c.Email, c.Password, false, lockoutOnFailure: false);
+                var user = await _um.FindByEmailAsync(c.Email);
 
-            if (!result.Succeeded)
-            {
-                return Unauthorized();
-            }
-
-            var token = Guid.NewGuid();
-            var expiration = DateTime.UtcNow.AddMinutes(20);
-
-            if(_data.UserTokens.Any(m => m.UserId == user.Id))
-            {
-                var userToken = _data.UserTokens.Single(m => m.UserId == user.Id);
-                userToken.Expiration = expiration;
-                token = userToken.Token;
-            }
-            else
-            {
-                _data.UserTokens.Add(new UserToken
+                if (user == null || !user.IsActive)
                 {
-                    UserId = user.Id,
-                    Token = token,
+                    return Unauthorized();
+                }
+
+                var result = await _sm.PasswordSignInAsync(c.Email, c.Password, false, lockoutOnFailure: false);
+
+                if (!result.Succeeded)
+                {
+                    return Unauthorized();
+                }
+
+                var token = Guid.NewGuid();
+                var expiration = DateTime.UtcNow.AddMinutes(20);
+
+                if (_data.UserTokens.Any(m => m.UserId == user.Id))
+                {
+                    var userToken = _data.UserTokens.Single(m => m.UserId == user.Id);
+                    userToken.Expiration = expiration;
+                    token = userToken.Token;
+                }
+                else
+                {
+                    _data.UserTokens.Add(new UserToken
+                    {
+                        UserId = user.Id,
+                        Token = token,
+                        Expiration = expiration
+                    });
+                }
+
+                _data.SaveChanges();
+
+                return Ok(new Token
+                {
+                    AccessToken = token,
                     Expiration = expiration
                 });
             }
-                        
-            _data.SaveChanges();
-
-            return Ok(new Token
+            catch (Exception)
             {
-                AccessToken = token,
-                Expiration = expiration
-            });
+                return StatusCode(500);
+            }
 
         }
     }

@@ -17,6 +17,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
 using WeightMeasurement.Filters;
+using WeightMeasurement.Services;
 
 namespace WeightMeasurement
 {
@@ -53,8 +54,12 @@ namespace WeightMeasurement
                     Title = "Weight Measuerment API"
                 });
 
-               // c.OperationFilter<AddRequiredHeaders>();
+               c.OperationFilter<AddRequiredHeaders>();
+            
             });
+
+            services.AddScoped<IUserDataService, UserDataService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

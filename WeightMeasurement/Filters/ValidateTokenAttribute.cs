@@ -14,7 +14,7 @@ namespace WeightMeasurement.Filters
         {
             var http = context.HttpContext;
             var db = http.RequestServices.GetService(typeof(ApplicationDbContext)) as ApplicationDbContext;
-            var sessionToken = http.Request.Headers["Authorization"][0];
+            var sessionToken = http.Request.Headers["Authorization"][0].Substring(7);
 
             Guid.TryParse(sessionToken, out Guid token);
 
