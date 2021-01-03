@@ -1,17 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
-using System.Threading.Tasks;
 using WeightMeasurement.Data;
 using WeightMeasurement.Data.Entities;
-using WeightMeasurement.Extensions;
 using WeightMeasurement.Filters;
-using WeightMeasurement.Models;
 using WeightMeasurement.Models.Api;
-using WeightMeasurement.Services;
 using model = WeightMeasurement.Models.Api;
 
 namespace WeightMeasurement.Controllers.Api
@@ -31,6 +26,7 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(List<GetSubUserModel>), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
         public IActionResult GetAllSubUsers([FromQuery] string userId)
         {
             try
@@ -56,6 +52,7 @@ namespace WeightMeasurement.Controllers.Api
         [ProducesResponseType(typeof(GetSubUserModel), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public IActionResult GetSubUser([FromRoute]int id)
         {
             try
@@ -82,6 +79,7 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
         public IActionResult PostSubUser([FromBody] PostSubUserModel subUser)
         {
             try
@@ -108,10 +106,16 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public IActionResult PutSubUser([FromRoute] int id,[FromBody] PutSubUserModel model)
         {
             try
             {
+                if (!_data.SubUsers.Any(m => m.Id == id))
+                {
+                    return NotFound("Not Found");
+                }
                 var su = _data.SubUsers.Single(m => m.Id == id);
 
                 su.Name = model.Name;
@@ -134,10 +138,16 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public IActionResult DeleteSubUser([FromRoute] int id)
         {
             try
             {
+                if (!_data.SubUsers.Any(m => m.Id == id))
+                {
+                    return NotFound("Not Found");
+                }
                 var su = _data.SubUsers.Single(m => m.Id == id);
 
                 su.SoftDeleted = true;

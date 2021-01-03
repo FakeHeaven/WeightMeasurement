@@ -1,5 +1,3 @@
-using System;
-
 namespace WeightMeasurement.Models
 {
     public class ErrorViewModel

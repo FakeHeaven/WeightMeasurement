@@ -32,6 +32,7 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(List<GetUserModel>), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
         public IActionResult GetAllUsers()
         {
             try
@@ -64,6 +65,8 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(List<GetUserModel>), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> ToggleUserStatus([FromRoute] string userId)
         {
             try
@@ -76,6 +79,11 @@ namespace WeightMeasurement.Controllers.Api
                 }
 
                 var data = await _um.FindByIdAsync(userId);
+
+                if (data == null)
+                {
+                    return NotFound("Not Found");
+                }
 
                 data.IsActive = !data.IsActive;
                 await _um.UpdateAsync(data);
@@ -93,11 +101,19 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(List<GetUserModel>), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> GetUser([FromRoute] string userId)
         {
             try
             {
+
                 var data = await _um.FindByIdAsync(userId);
+
+                if (data == null)
+                {
+                    return NotFound("Not Found");
+                }
 
                 return Ok(new GetUserModel()
                 {

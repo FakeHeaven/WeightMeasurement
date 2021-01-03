@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -33,6 +32,7 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(TokenModel), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> Token([FromBody] CredentialModel c)
         {
             try

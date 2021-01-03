@@ -7,7 +7,6 @@ using WeightMeasurement.Data;
 using WeightMeasurement.Data.Entities;
 using WeightMeasurement.Filters;
 using WeightMeasurement.Models.Api;
-using WeightMeasurement.Services;
 
 namespace WeightMeasurement.Controllers.Api
 {
@@ -26,6 +25,7 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(List<GetWeightModel>), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
         public IActionResult GetAllWeights([FromQuery] int subUserId)
         {
             try
@@ -51,6 +51,7 @@ namespace WeightMeasurement.Controllers.Api
         [ProducesResponseType(typeof(GetWeightModel), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public IActionResult GetWeight([FromRoute] int id)
         {
             try
@@ -77,6 +78,7 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
         public IActionResult PostWeight([FromBody] PostWeightModel model)
         {
             try
@@ -104,10 +106,16 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public IActionResult PutWeight([FromRoute] int id, [FromBody] PutWeightModel model)
         {
             try
             {
+                if (!_data.SubUserWeights.Any(m => m.Id == id))
+                {
+                    return NotFound("Not Found");
+                }
                 var su = _data.SubUserWeights.Single(m => m.Id == id);
 
                 su.Weight = model.Weight;
@@ -130,10 +138,16 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public IActionResult DeleteWeight([FromRoute] int id)
         {
             try
             {
+                if (!_data.SubUserWeights.Any(m => m.Id == id))
+                {
+                    return NotFound("Not Found");
+                }
                 var su = _data.SubUserWeights.Single(m => m.Id == id);
 
                 su.SoftDeleted = true;
