@@ -15,12 +15,10 @@ namespace WeightMeasurement.Controllers.Api
     public class WeightController : Controller
     {
         private readonly ApplicationDbContext _data;
-        private readonly IUserDataService _ud;
 
-        public WeightController(ApplicationDbContext data, IUserDataService ud)
+        public WeightController(ApplicationDbContext data)
         {
             _data = data;
-            _ud = ud;
         }
 
         [HttpGet("weights")]

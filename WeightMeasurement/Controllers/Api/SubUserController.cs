@@ -20,12 +20,10 @@ namespace WeightMeasurement.Controllers.Api
     public class SubUserController : Controller 
     {
         private readonly ApplicationDbContext _data;
-        private readonly IUserDataService _ud;
 
-        public SubUserController(ApplicationDbContext data, IUserDataService ud) 
+        public SubUserController(ApplicationDbContext data) 
         {
             _data = data;
-            _ud = ud;
         }
 
         [HttpGet("subusers")]
@@ -33,7 +31,7 @@ namespace WeightMeasurement.Controllers.Api
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(List<GetSubUserModel>), 200)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetAllSubUsers([FromQuery] string userId)
+        public IActionResult GetAllSubUsers([FromQuery] string userId)
         {
             try
             {
