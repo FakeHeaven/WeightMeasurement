@@ -1,49 +1,44 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
-using System.Threading.Tasks;
 using WeightMeasurement.Data;
 using WeightMeasurement.Data.Entities;
-using WeightMeasurement.Extensions;
 using WeightMeasurement.Filters;
-using WeightMeasurement.Models;
 using WeightMeasurement.Models.Api;
 using WeightMeasurement.Services;
-using model = WeightMeasurement.Models.Api;
 
 namespace WeightMeasurement.Controllers.Api
 {
     [Route("api")]
-    public class SubUserController : Controller 
+    public class WeightController : Controller
     {
         private readonly ApplicationDbContext _data;
         private readonly IUserDataService _ud;
 
-        public SubUserController(ApplicationDbContext data, IUserDataService ud) 
+        public WeightController(ApplicationDbContext data, IUserDataService ud)
         {
             _data = data;
             _ud = ud;
         }
 
-        [HttpGet("subusers")]
+        [HttpGet("weights")]
         [ValidateToken]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(List<GetSubUserModel>), 200)]
+        [ProducesResponseType(typeof(List<GetWeightModel>), 200)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetAllSubUsers([FromQuery] string userId)
+        public IActionResult GetAllWeights([FromQuery] int subUserId)
         {
             try
             {
-                var data = _data.SubUsers.Where(m => m.UserId == userId && !m.SoftDeleted).ToList();
+                var data = _data.SubUserWeights.Where(m => m.SubUserId == subUserId && !m.SoftDeleted).ToList();
 
-                return Ok(data.Select(m => new GetSubUserModel()
+                return Ok(data.Select(m => new GetWeightModel()
                 {
                     Id = m.Id,
-                    Name = m.Name,
-                    DateOfBirth = m.DateOfBirth
+                    Weight = m.Weight,
+                    AddedOn = m.AddedOn,
                 }).ToList());
             }
             catch (Exception)
@@ -52,24 +47,24 @@ namespace WeightMeasurement.Controllers.Api
             }
         }
 
-        [HttpGet("subusers/{id}")]
+        [HttpGet("weights/{id}")]
         [ValidateToken]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(GetSubUserModel), 200)]
+        [ProducesResponseType(typeof(GetWeightModel), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        public IActionResult GetSubUser([FromRoute]int id)
+        public IActionResult GetWeight([FromRoute] int id)
         {
             try
             {
-                if (!_data.SubUsers.Any(m => m.Id == id))
+                if (!_data.SubUserWeights.Any(m => m.Id == id))
                 {
                     return NotFound("Not Found");
                 }
-                return Ok(_data.SubUsers.Where(m => m.Id == id).Select(m => new GetSubUserModel() {
+                return Ok(_data.SubUserWeights.Where(m => m.Id == id).Select(m => new GetWeightModel() { 
                     Id = m.Id,
-                    Name = m.Name,
-                    DateOfBirth = m.DateOfBirth
+                    Weight = m.Weight,
+                    AddedOn = m.AddedOn
                 }).Single());
 
             }
@@ -79,21 +74,22 @@ namespace WeightMeasurement.Controllers.Api
             }
         }
 
-        [HttpPost("subusers")]
+        [HttpPost("weights")]
         [ValidateToken]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(401)]
-        public IActionResult PostSubUser([FromBody] PostSubUserModel subUser)
+        public IActionResult PostWeight([FromBody] PostWeightModel model)
         {
             try
             {
-                var su = new SubUser() { 
-                   UserId = subUser.UserId,
-                   Name = subUser.Name,
-                   DateOfBirth = subUser.DateOfBirth
+                var su = new SubUserWeight()
+                {
+                    SubUserId = model.SubUserId,
+                    Weight = model.Weight,
+                    AddedOn = DateTime.UtcNow
                 };
-                _data.SubUsers.Add(su);
+                _data.SubUserWeights.Add(su);
                 _data.SaveChanges();
 
                 return Ok(su.Id);
@@ -105,21 +101,21 @@ namespace WeightMeasurement.Controllers.Api
             }
         }
 
-        [HttpPut("subusers/{id}")]
+        [HttpPut("weights/{id}")]
         [ValidateToken]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(401)]
-        public IActionResult PutSubUser([FromRoute] int id,[FromBody] PutSubUserModel model)
+        public IActionResult PutWeight([FromRoute] int id, [FromBody] PutWeightModel model)
         {
             try
             {
-                var su = _data.SubUsers.Single(m => m.Id == id);
+                var su = _data.SubUserWeights.Single(m => m.Id == id);
 
-                su.Name = model.Name;
-                su.DateOfBirth = model.DateOfBirth;
+                su.Weight = model.Weight;
+                su.AddedOn = model.AddedOn;
 
-                _data.SubUsers.Update(su);
+                _data.SubUserWeights.Update(su);
                 _data.SaveChanges();
 
                 return NoContent();
@@ -131,20 +127,20 @@ namespace WeightMeasurement.Controllers.Api
             }
         }
 
-        [HttpDelete("subusers/{id}")]
+        [HttpDelete("weights/{id}")]
         [ValidateToken]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(401)]
-        public IActionResult DeleteSubUser([FromRoute] int id)
+        public IActionResult DeleteWeight([FromRoute] int id)
         {
             try
             {
-                var su = _data.SubUsers.Single(m => m.Id == id);
+                var su = _data.SubUserWeights.Single(m => m.Id == id);
 
                 su.SoftDeleted = true;
 
-                _data.SubUsers.Update(su);
+                _data.SubUserWeights.Update(su);
                 _data.SaveChanges();
 
                 return NoContent();

@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace WeightMeasurement.Models.Api
 {
-    public class Token
+    public class PutWeightModel
     {
-        public Guid AccessToken { get; set; }
-        public DateTime Expiration { get; set; }
+        public decimal Weight { get; set; }
+
+        public DateTime AddedOn { get; set; }
+
     }
 }

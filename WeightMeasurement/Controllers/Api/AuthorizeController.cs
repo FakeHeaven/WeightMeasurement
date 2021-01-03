@@ -31,9 +31,9 @@ namespace WeightMeasurement.Controllers.Api
 
         [HttpPost("token")]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(Token), 200)]
+        [ProducesResponseType(typeof(TokenModel), 200)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> Token([FromBody] Credentials c)
+        public async Task<IActionResult> Token([FromBody] CredentialModel c)
         {
             try
             {
@@ -74,8 +74,9 @@ namespace WeightMeasurement.Controllers.Api
 
                 _data.SaveChanges();
 
-                return Ok(new Token
+                return Ok(new TokenModel
                 {
+                    UserId = user.Id,
                     AccessToken = token,
                     Expiration = expiration
                 });

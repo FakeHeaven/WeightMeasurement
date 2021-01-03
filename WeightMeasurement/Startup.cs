@@ -107,6 +107,13 @@ namespace WeightMeasurement
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            // Automatically run undeployed migrations
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var service1 = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                service1.Database.Migrate();
+            }
         }
     }
 }
