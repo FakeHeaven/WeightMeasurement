@@ -24,3 +24,6 @@ function Confirm(title, icon, color, body, callback) {
         html: true
     }).then(callback);
 }
+
+$('[data-toggle="tooltip"]').tooltip()
+

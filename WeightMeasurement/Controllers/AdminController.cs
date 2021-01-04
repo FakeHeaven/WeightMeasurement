@@ -37,11 +37,11 @@ namespace WeightMeasurement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UserStatusToggle(string id, bool isChecked)
+        public async Task<IActionResult> UserStatusToggle(string userId, bool isChecked)
         {
             try
             {
-                var user = await _um.FindByIdAsync(id);
+                var user = await _um.FindByIdAsync(userId);
                 user.IsActive = isChecked;
                 await _um.UpdateAsync(user);
 

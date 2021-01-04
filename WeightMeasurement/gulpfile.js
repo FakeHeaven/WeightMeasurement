@@ -11,7 +11,7 @@ function npmCSS() {
             "../node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css",
             "../node_modules/toastr/build/toastr.min.css",
             "../node_modules/@claviska/jquery-alertable/jquery.alertable.css",
-            "../node_modules/gijgo/css/gijgo.min.css",
+            "../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css",
             "../node_modules/bootstrap4-toggle/css/bootstrap4-toggle.min.css",
         ])
         .pipe(concat("vendor.css"))
@@ -33,7 +33,7 @@ function npmJS() {
             "../node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js",
             "../node_modules/@claviska/jquery-alertable/jquery.alertable.min.js",
             "../node_modules/gasparesganga-jquery-loading-overlay/dist/loadingoverlay.min.js",
-            "../node_modules/gijgo/js/gijgo.min.js",
+            "../node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js",
             "../node_modules/bootstrap4-toggle/js/bootstrap4-toggle.min.js"
         ])
         .pipe(concat("vendor.js"))

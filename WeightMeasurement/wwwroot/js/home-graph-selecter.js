@@ -9,12 +9,10 @@
                 AttachGraphFormValidation();
 
                 $('#date-start').datepicker({
-                    uiLibrary: 'bootstrap4',
                     format: 'dd.mm.yyyy'
                 });
 
                 $('#date-end').datepicker({
-                    uiLibrary: 'bootstrap4',
                     format: 'dd.mm.yyyy'
                 });
             }

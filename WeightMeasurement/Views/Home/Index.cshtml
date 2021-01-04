@@ -4,22 +4,19 @@
     ViewData["Title"] = "Home Page";
 }
 
-@*@if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
-    {
-        <p>This paragraph is displayed because you fulfilled PolicyName.</p>
-    }*@
-
 <div class="row">
-    <div class="col-8">
-        <h5>Weights</h5> <hr>
-        <div id="weights">
-            <partial name="_WeightList" model="Model.Weights" />
-        </div>
-    </div>
-    <div class="col-4">
+    <div class="col-5">
         <h5>Sub Users <button id="subuser-add" class="btn btn-primary btn-sm float-right"><i class="fas fa-plus"></i> Add SubUser </button></h5> <hr>
         <div id="subusers">
             <partial name="_SubUserList" model="Model.SubUsers" />
+        </div>
+    </div>
+    <div class="col-7">
+        <h5>Weights</h5> <hr>
+        <div id="weights">
+            <div class="alert alert-info" role="alert">
+                Please click a button on the left to load subusers weights. 
+            </div>
         </div>
     </div>
 </div>

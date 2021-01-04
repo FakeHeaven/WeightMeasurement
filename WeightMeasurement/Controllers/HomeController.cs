@@ -33,13 +33,15 @@ namespace WeightMeasurement.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string userId = null)
         {
+            if(userId == null)
+            {
+                userId = _um.GetUserId(User);
+            }
             var vm = new HomeViewModel();
 
-            vm.SubUsers = await GetSubUsers();
-
-            vm.Weights = await GetWeights();
+            vm.SubUsers = GetSubUsers(userId);
 
             return View(vm);
         }
@@ -56,24 +58,15 @@ namespace WeightMeasurement.Controllers
             return PartialView("_GraphDateRangeSelecter", vm); 
         }
 
-        public async Task<IActionResult> RetrieveSubUserList()
+        public IActionResult RetrieveSubUserList(string userId)
         {
-            return PartialView("_SubUserList", await GetSubUsers());
+            return PartialView("_SubUserList", GetSubUsers(userId));
         }
 
-        private async Task<List<HomeSubUserModel>> GetSubUsers()
+        private List<HomeSubUserModel> GetSubUsers(string userId)
         {
 
-            var isAdmin = (await _auth.AuthorizeAsync(User, "Admin")).Succeeded;
-            var data = new List<SubUser>();
-            if (isAdmin)
-            {
-                data = _data.SubUsers.Where(m => !m.SoftDeleted).ToList();
-            }
-            else
-            {
-                data = _data.SubUsers.Where(m => m.UserId == _um.GetUserId(User) && !m.SoftDeleted).ToList();
-            }
+            var data = _data.SubUsers.Where(m => m.UserId == userId && !m.SoftDeleted).ToList();
 
             return data.Select(m => new HomeSubUserModel()
             {
@@ -84,21 +77,14 @@ namespace WeightMeasurement.Controllers
             }).OrderBy(m => m.Email).ThenBy(m => m.Name).ToList();
         }
 
-        private async Task<List<HomeWeightModel>> GetWeights()
+        private List<HomeWeightModel> GetWeights(int subUserId)
         {
-            var isAdmin = (await _auth.AuthorizeAsync(User, "Admin")).Succeeded;
-            var data = new List<SubUserWeight>();
-            if (isAdmin)
-            {
-                data = _data.SubUserWeights.Include(m => m.SubUser).Where(m => !m.SoftDeleted).ToList();
-            }
-            else
-            {
-                data = _data.SubUserWeights.Include(m => m.SubUser)
-                    .Where(m => m.SubUser.UserId == _um.GetUserId(User) && !m.SoftDeleted && !m.SubUser.SoftDeleted)
-                    .ToList();
-            }
 
+            var data = _data.SubUserWeights.Include(m => m.SubUser)
+                    .Where(m => m.SubUserId == subUserId && !m.SoftDeleted && !m.SubUser.SoftDeleted)
+                    .ToList();
+
+            
             return data.Select(m => new HomeWeightModel()
             {
                 Id = m.Id,
@@ -117,9 +103,9 @@ namespace WeightMeasurement.Controllers
 
 
 
-        public async Task<IActionResult> RetrieveWeightList()
+        public IActionResult RetrieveWeightList(int subUserId)
         {
-           return PartialView("_WeightList", await GetWeights());
+           return PartialView("_WeightList", GetWeights(subUserId));
         }
 
 

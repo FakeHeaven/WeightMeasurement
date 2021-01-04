@@ -12,6 +12,11 @@
         DeleteWeight($(this).data("id"), $(this).data("name"));
     });
 
+    $(document).on("click", ".weight-view", function () {
+        RetrieveWeightList($(this).data("subuser-id"));
+
+    });
+
     AttachTableRules();
 });
 
@@ -24,8 +29,7 @@ function LoadWeightManageModal(id, subuserid) {
             $('#modal').modal(modalOptions, 'show');
             AttachWeightFormValidation();
 
-            $('#date').datepicker({
-                uiLibrary: 'bootstrap4',
+            $('#date').datepicker({              
                 format: 'dd.mm.yyyy'
             });
         }
@@ -47,9 +51,9 @@ function AttachTableRules() {
     });
 }
 
-function RetrieveWeightList() {
+function RetrieveWeightList(subUserId) {
     $.ajax({
-        url: "/Home/RetrieveWeightList",
+        url: "/Home/RetrieveWeightList?subUserId=" + subUserId,
         method: "GET",
         success: function (html) {
             $("#weights").html(html);

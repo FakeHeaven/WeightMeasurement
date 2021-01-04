@@ -2,13 +2,13 @@
 
     AttachTableRules();
     $(document).on("change", ".user-toggle", function () {
-        var id = $(this).data("subuser-id");
+        var userId = $(this).data("user-id");
         var isChecked = $(this).prop("checked")
         $.ajax({
             url: "/Admin/UserStatusToggle",
             method: "POST",
             data: {
-                id: id,
+                userId: userId,
                 isChecked: isChecked
             },
             success: function (result) {

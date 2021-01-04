@@ -29,8 +29,11 @@
                         <td>@su.Email</td>
                         <td>@su.SubUserCount</td>
                         <td>
-                            <input class="user-toggle" type="checkbox" @isChecked data-on="Active" data-off="Inactive" data-onstyle = "success" data-offstyle = "danger"
-                                data-subuser-id="@su.Id" data-toggle="toggle" data-size="xs">
+                            <span class="float-right">
+                                <a class="btn btn-outline-info btn-sm" href="/Home?userId=@su.Id"><i class="fas fa-eye"></i> View SubUser</a>
+                                <input class="user-toggle" type="checkbox" @isChecked data-on="Active" data-off="Inactive" data-onstyle="success" data-offstyle="danger"
+                                       data-user-id="@su.Id" data-toggle="toggle" data-size="sm">
+                            </span>                         
                         </td>
                     </tr>
                 }
