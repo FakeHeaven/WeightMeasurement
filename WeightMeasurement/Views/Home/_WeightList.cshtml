@@ -1,11 +1,18 @@
 ﻿@model List<WeightMeasurement.Models.HomeWeightModel>
 
-@{var isAdmin = (await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded; }
+@{ var isAdmin = (await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded; }
+
+<h5>
+    Weights <small>for @TempData["name"]</small>
+            <span class=float-right>
+                <button id="weight-add" class="btn btn-outline-primary btn-sm" data-subuser-id="@(TempData["subUserId"])" data-toggle="tooltip" data-placement="top" title="Add Weight Entry"><i class="fas fa-plus"></i> Add Weight Entry</button>
+            </span>
+</h5>
+<hr>
 
 <table id="weights-table" class="table table-striped" style="width: 100%;">
     <thead>
         <tr>
-            <th>Name</th>
             <th>Weight</th>
             <th>Date</th>
             <th></th>
@@ -15,13 +22,6 @@
         @foreach (var su in Model)
         {
             <tr>
-                <td>@su.Name  
-                        @if (isAdmin)
-                            {
-                                <br/>
-                                @su.Email
-                            }
-                </td>
                 <td>@su.Weight</td>
                 <td>@su.Date</td>
                 <td>
@@ -34,3 +34,7 @@
         }
     </tbody>
 </table>
+
+<script>
+    var subUserId = @(TempData["subUserId"]);
+</script>

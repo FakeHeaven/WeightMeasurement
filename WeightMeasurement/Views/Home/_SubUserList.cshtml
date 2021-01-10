@@ -8,16 +8,10 @@
     <div class="row" style="margin-bottom:5px;border-bottom:1px solid rgba(0,0,0,.1);">
         <div class="col-6">
             @su.Name @su.Age
-            @if (isAdmin)
-            {
-                <br/>
-                @su.Email
-            }
         </div>
 
         <div class="col-6">
-            <span class="float-right">
-                <button class="weight-add btn btn-outline-primary btn-sm" data-subuser-id="@su.Id" data-toggle="tooltip" data-placement="top" title="Add Weight Entry"><i class="fas fa-plus"></i></button>
+            <span class="float-right">        
                 <button class="weight-view btn btn-outline-info btn-sm" data-subuser-id="@su.Id" data-toggle="tooltip" data-placement="top" title="View Weight Entries"><i class="fas fa-table"></i></button>
                 <button class="graph-open btn btn-outline-success btn-sm" data-subuser-id="@su.Id" data-toggle="tooltip" data-placement="top" title="View Weight Graph"><i class="fas fa-chart-area"></i></button>
                 <button class="subuser-edit btn btn-info btn-sm" data-id="@su.Id" data-toggle="tooltip" data-placement="top" title="Edit SubUser"><i class="fas fa-edit"></i></button>

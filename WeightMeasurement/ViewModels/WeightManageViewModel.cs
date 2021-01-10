@@ -12,7 +12,7 @@ namespace WeightMeasurement.ViewModels
 
         public string SubUserName { get; set; }
 
-        public DateTime AddedOn { get; set; }
+        public string AddedOn { get; set; }
 
     }
 }

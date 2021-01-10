@@ -12,10 +12,9 @@
         </div>
     </div>
     <div class="col-7">
-        <h5>Weights</h5> <hr>
         <div id="weights">
             <div class="alert alert-info" role="alert">
-                Please click a button on the left to load subusers weights. 
+                Please click a button on the left to load subusers weights.
             </div>
         </div>
     </div>
@@ -23,7 +22,9 @@
 
 
 @section Scripts{
-
+    <script>
+    var userId = "@Model.UserId";
+    </script>
     <script type="text/javascript" src="~/js/home-subuser.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/js/home-weights.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/js/home-graph-selecter.js" asp-append-version="true"></script>

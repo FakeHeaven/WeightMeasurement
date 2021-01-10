@@ -23,15 +23,15 @@ function LoadSubUserManageModal(id) {
             AttachSubUserFormValidation();
 
             $('#dob').datepicker({
-                format: 'dd.mm.yyyy'
+                format: 'd.m.yyyy'
             });
         }
     });
 }
 
-function RetrieveSubUserList() {
+function RetrieveSubUserList(userId) {
     $.ajax({
-        url: "/Home/RetrieveSubUserList",
+        url: "/Home/RetrieveSubUserList?userId=" + userId,
         method: "GET",
         success: function (html) {
             $("#subusers").html(html);
@@ -49,7 +49,7 @@ function DeleteSubUser(id, name) {
                 success: function (result) {
                     if (result.success) {
                         toastr.success("Sub User successfully removed.");
-                        RetrieveSubUserList();
+                        RetrieveSubUserList(userId);
                     } else {
                         toastr.error("Sub User could not be removed.");
                     }
@@ -102,7 +102,7 @@ function AttachSubUserFormValidation() {
                 success: function (result) {
                     if (result.success) {
                         toastr.success("New Sub User successfully added.");
-                        RetrieveSubUserList();
+                        RetrieveSubUserList(userId);
                     } else {
                         toastr.error("New Sub User could not be added.");
                     }

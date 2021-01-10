@@ -41,6 +41,7 @@ namespace WeightMeasurement.Controllers
             }
             var vm = new HomeViewModel();
 
+            vm.UserId = userId;
             vm.SubUsers = GetSubUsers(userId);
 
             return View(vm);
@@ -73,8 +74,7 @@ namespace WeightMeasurement.Controllers
                 Id = m.Id,
                 Name = m.Name,
                 Age = m.DateOfBirth.GetAge(),
-                Email = GetUser(m.UserId).Result.Email
-            }).OrderBy(m => m.Email).ThenBy(m => m.Name).ToList();
+            }).OrderBy(m => m.Name).ToList();
         }
 
         private List<HomeWeightModel> GetWeights(int subUserId)
@@ -82,6 +82,7 @@ namespace WeightMeasurement.Controllers
 
             var data = _data.SubUserWeights.Include(m => m.SubUser)
                     .Where(m => m.SubUserId == subUserId && !m.SoftDeleted && !m.SubUser.SoftDeleted)
+                    .OrderBy(m => m.AddedOn)
                     .ToList();
 
             
@@ -91,9 +92,8 @@ namespace WeightMeasurement.Controllers
                 Name = m.SubUser.Name,
                 Weight = m.Weight,
                 Date = m.AddedOn.ToString("d.M.yyyy"),
-                SubUserId = m.SubUserId,
-                Email = GetUser(m.SubUser.UserId).Result.Email
-            }).OrderBy(m => m.Email).ThenBy(m => m.Name).ToList();
+                SubUserId = m.SubUserId
+            }).ToList();
         }
 
         private async Task<ApplicationUser> GetUser(string userId)
@@ -105,7 +105,10 @@ namespace WeightMeasurement.Controllers
 
         public IActionResult RetrieveWeightList(int subUserId)
         {
-           return PartialView("_WeightList", GetWeights(subUserId));
+            TempData["name"] = _data.SubUsers.Single(m => m.Id == subUserId).Name;
+            TempData["subUserId"] = subUserId;
+
+            return PartialView("_WeightList", GetWeights(subUserId));
         }
 
 
@@ -121,7 +124,7 @@ namespace WeightMeasurement.Controllers
             vm.Id = su.Id;
             vm.SubUserId = subuserid;
             vm.Weight = su.Weight;
-            vm.AddedOn = su.AddedOn;
+            vm.AddedOn = su.AddedOn.ToString("M.d.yyyy");
 
             vm.SubUserName = _data.SubUsers.Single(m => m.Id == subuserid)?.Name;
 
@@ -191,7 +194,7 @@ namespace WeightMeasurement.Controllers
 
             vm.Id = su.Id;
             vm.Name = su.Name;
-            vm.DateOfBirth = su.DateOfBirth;
+            vm.DateOfBirth = su.DateOfBirth.ToString("M.d.yyyy");
 
             return PartialView("_SubUserManage", vm);
         }

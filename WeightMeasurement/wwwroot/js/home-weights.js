@@ -1,5 +1,5 @@
 ﻿$(function () {
-    $(document).on("click", ".weight-add", function () {
+    $(document).on("click", "#weight-add", function () {
         LoadWeightManageModal(0, $(this).data("subuser-id"));
 
     });
@@ -30,7 +30,7 @@ function LoadWeightManageModal(id, subuserid) {
             AttachWeightFormValidation();
 
             $('#date').datepicker({              
-                format: 'dd.mm.yyyy'
+                format: 'd.m.yyyy'
             });
         }
     });
@@ -70,8 +70,8 @@ function DeleteWeight(id, name) {
                 method: "GET",
                 success: function (result) {
                     if (result.success) {
-                        toastr.success("Weight successfully removed.");  
-                        RetrieveWeightList();
+                        toastr.success("Weight successfully removed.");
+                        RetrieveWeightList(subUserId);
                     } else {
                         toastr.error("Weight could not be removed.");
                     }
@@ -133,7 +133,7 @@ function AttachWeightFormValidation() {
                 success: function (result) {
                     if (result.success) {
                         toastr.success("New weight successfully added.");
-                        RetrieveWeightList();
+                        RetrieveWeightList(subUserId);
                     } else {
                         toastr.error("New weight could not be added.");
                     }
