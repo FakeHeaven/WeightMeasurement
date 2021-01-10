@@ -96,12 +96,6 @@ namespace WeightMeasurement.Controllers
             }).ToList();
         }
 
-        private async Task<ApplicationUser> GetUser(string userId)
-        {
-            return await _um.FindByIdAsync(userId); 
-        }
-
-
 
         public IActionResult RetrieveWeightList(int subUserId)
         {
@@ -131,7 +125,7 @@ namespace WeightMeasurement.Controllers
             return PartialView("_WeightManage", vm);
         }
 
-        public IActionResult WeightUpdate(int id, int subUserId, decimal weight, DateTime date)
+        public IActionResult WeightUpdate(int id, int subUserId, decimal weight, string date)
         {
             try
             {
@@ -140,10 +134,11 @@ namespace WeightMeasurement.Controllers
                 {
                     su = _data.SubUserWeights.First(m => m.Id == id);
                 }
+                var dateArray = date.Split(".");
 
                 su.SubUserId = subUserId;
                 su.Weight = weight;
-                su.AddedOn = date;
+                su.AddedOn = new DateTime(int.Parse(dateArray[2]), int.Parse(dateArray[1]), int.Parse(dateArray[0]));
 
                 if (id == 0)
                 {
@@ -199,7 +194,7 @@ namespace WeightMeasurement.Controllers
             return PartialView("_SubUserManage", vm);
         }
 
-        public IActionResult SubUserUpdate(int id, string name, DateTime dob)
+        public IActionResult SubUserUpdate(int id, string name, string dob)
         {
             try
             {
@@ -208,10 +203,12 @@ namespace WeightMeasurement.Controllers
                 {
                     su = _data.SubUsers.First(m => m.Id == id);
                 }
-                
+
+                var dateArray = dob.Split(".");
+
                 su.UserId = _um.GetUserId(User);
                 su.Name = name;
-                su.DateOfBirth = dob;
+                su.DateOfBirth = new DateTime(int.Parse(dateArray[2]), int.Parse(dateArray[1]), int.Parse(dateArray[0]));
 
                 if (id == 0)
                     _data.SubUsers.Add(su);
