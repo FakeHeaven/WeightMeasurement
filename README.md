@@ -15,7 +15,7 @@
 * UserTokens - tracks valid authentication to access the API.
 * Tables are updated through migrations that run during website deployment.
 
-![DataBase](./Images/DataBase.png)
+![DataBase](./Images/DataBase.PNG)
 
 ## Sub Users and Weight Management page
 *** This is a page that allows a registered user to manage their SubUsers and the Weights for each of them.
@@ -24,16 +24,16 @@
     * A button per SubUser to open a modal to select a date range and open a page with that SubUSer's recorded weights in graph form.
 * Add/Edit/Delete Weight Entries from the generated Table.
 
-![FirstPage](./Images/FirstPage.png)
-![WeightPage](./Images/WeightPage.png)
-![GraphPage](./Images/GraphPage.png)
+![FirstPage](./Images/FirstPage.PNG)
+![WeightPage](./Images/WeightPage.PNG)
+![GraphPage](./Images/GraphPage.PNG)
 
 ## Admin page (User Management)
 * Create page that shows a list of registered Users.
 * Allow Admin to enable and disable them (Update default login process to check for IsActive).
 * Allow the Admin to click a button for each registered User that takes them to the SubUser/Weight page to view all data for the selected registered User.
 
-![UserManagment](./Images/UserManagment.png)
+![UserManagment](./Images/UserManagment.PNG)
 
 ## API (New Users can only be added through the website)
 *** This API is built on REST principles, utilizing HTTP Verbs to control CRUD actions.
@@ -42,7 +42,7 @@
 * SubUsers - All CRUD operations.
 * Weights - All CRUD operations.
 
-![API](./Images/API.png)
+![API](./Images/API.PNG)
 
 
 ## Android
